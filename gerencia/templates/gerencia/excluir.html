@@ -1,0 +1,11 @@
+{% extends 'base_gerencia.html' %}
+
+{% block main %}
+<form method="POST">
+    {% csrf_token %}
+    <div>
+        <button type="submit">Confirmar Exclusão</button>
+        <a href="{% url 'index' %}">Cancelar</a>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'base_gerencia.html' %}
+
+{% block main %}
+
+     <!-- Page Heading -->
+     <h1 class="h3 mb-2 text-gray-800">Gerenciar Usuários</h1>
+     <p class="mb-4">Aqui você pode editar ou remover as notícias existentes.</p>
+
+   
+
+     <!-- Notícias Table -->
+     <div class="card shadow mb-4">
+         <div class="card-header py-3">
+             <h6 class="m-0 font-weight-bold text-primary">Listagem de Usuários</h6>
+         </div>
+         <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                     <thead>
+                         <tr>
+                             <th style="width: 20%;">Nome</th>
+                             <th>E-mail</th>
+                             <th>Grupos</th>
+                             <th style="width: 10%;">Ações</th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                         {% for usuario in usuarios %}
+                         <tr>
+                             <td>{{ usuario.username }} </td>
+                             <td>{{ usuario.email }}</td>
+                             <td>
+                                {% for grupo in usuario.groups.all %}
+                                        <span class="badge bg-success">{{ grupo.name }}</span>
+                                 {% endfor %}
+                             </td>
+                             <td class="text-end">
+                                <a href="{% url 'usuarios:editar_usuario' usuario.id %}" class="btn btn-warning btn-sm me-2">Editar</a>
+                                <form action="#" method="POST" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm">Remover</button>
+                                </form>
+                            </td>
+                         </tr>
+                         {% endfor %}
+                     </tbody>
+                 </table>
+
+                 <div class="mt-3">
+                    {% include 'usuarios/pagination.html' with page_obj=usuarios %}
+                 </div>
+
+
+             </div>
+         </div>
+     </div>
+
+     <div class="d-flex justify-content-end">
+        <a href="{% url 'usuarios:cadastrar_usuario'%}" class="btn btn-primary btn-icon-split">
+            <span class="icon text-white-50">
+                <i class="fas fa-flag"></i>
+            </span>
+            <span class="text">Cadastrar Novo Usuários</span>
+        </a>
+    </div>
+
+{% endblock %}

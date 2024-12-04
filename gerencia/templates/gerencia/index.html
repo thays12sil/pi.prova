@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+    
+    {% block parte_central %}
+
+        <div class="row">
+            <!-- Blog entries-->
+            {% if noticias and noticias|length > 0 %}
+                <div class="col-lg-8">
+                    <!-- Featured blog post-->
+                        <div class="card mb-4">
+                            <a href="#!"><img class="card-img-top" src={{ noticias.0.image.url  }} alt="..." /></a>
+                            <div class="card-body">
+                                <div class="small text-muted">{{noticias.0.data_publicacao}}</div>
+                                <h2 class="card-title">{{noticias.0.titulo}}</h2>
+                                <p class="card-text">{{ noticias.0.texto }}</p>
+                                <a class="btn btn-primary" href="#!">Read more →</a>
+                            </div>
+                        </div>
+                    <!-- Nested row for non-featured blog posts-->
+                    <div class="row">
+                        {% for noticia in noticias|slice:"1:" %}
+                        <div class="col-lg-6">
+                                <!-- Blog post-->
+                                <div class="card mb-4">
+                                    <img class="card-img-top" src="{{ noticia.image.url }}" alt="{{ noticia.titulo }}" style="width: 100%; height: 200px; object-fit: cover;" />
+                                    <div class="card-body">
+                                        <div class="small text-muted">{{noticia.data_publicacao |date:"F j, Y" }}</div>
+                                        <h2 class="card-title h4">{{ noticia.titulo }}</h2>
+                                        <p class="card-text">{{ noticia.texto }}</p>
+                                        <a class="btn btn-primary" href="{{ post.get_absolute_url }}">Read more →</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                 
+
+                    <!-- Pagination-->
+                    <nav aria-label="Pagination">
+                        <hr class="my-0" />
+                        <ul class="pagination justify-content-center my-4">
+                            <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">Newer</a></li>
+                            <li class="page-item active" aria-current="page"><a class="page-link" href="#!">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#!">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#!">3</a></li>
+                            <li class="page-item disabled"><a class="page-link" href="#!">...</a></li>
+                            <li class="page-item"><a class="page-link" href="#!">15</a></li>
+                            <li class="page-item"><a class="page-link" href="#!">Older</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            {% endif %}        
+            <!-- Side widgets-->
+            <div class="col-lg-4">
+                <!-- Search widget-->
+                <!-- Search widget-->
+                <div class="card mb-4">
+                    <div class="card-header">Search</div>
+                    <div class="card-body">
+                        <form method="get" action=".">
+                            <div class="input-group">
+                                <input 
+                                    class="form-control" 
+                                    type="text" 
+                                    name="search" 
+                                    placeholder="Enter search term..." 
+                                    aria-label="Enter search term..." 
+                                    aria-describedby="button-search" 
+                                    value="{{ search_query|default:'' }}"  
+                                />
+                                <button class="btn btn-primary" id="button-search" type="submit">Go!</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <form method="GET">
+                    {{ form.as_p }}
+                    <button type="submit">Buscar</button>
+                </form>
+
+                <!-- Categories widget-->
+                <div class="card mb-4">
+                    <div class="card-header">Categories</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="list-unstyled mb-0">
+                                    {% for categoria in categorias %}
+                                        <li>
+                                            <a href="{% url 'editar_categoria' categoria.id %}">
+                                                {{ categoria.nome }}                                               
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                                <div class="pagination">
+                                    <span class="step-links">
+                                        {% if categorias.has_previous %}
+                                            <a href="?page=1">&laquo; primeira</a>
+                                            <a href="?page={{ categorias.previous_page_number }}">anterior</a>
+                                        {% endif %}
+                                            <span class="current">
+                                                Página {{ categorias.number }} de {{ categorias.paginator.num_pages }}
+                                            </span> 
+                                        {% if categorias.has_next %} 
+                                            <a href="?page={{ categorias.next_page_number }}">próxima</a>
+                                            <a href="?page={{ categorias.paginator.num_pages }}">última &raquo;</a>
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+
+    {% endblock %}

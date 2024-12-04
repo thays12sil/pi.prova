@@ -1,0 +1,91 @@
+{% extends 'base_gerencia.html' %}
+
+{% block main %}
+
+     <!-- Page Heading -->
+     <h1 class="h3 mb-2 text-gray-800">Gerenciar Notícias</h1>
+     <p class="mb-4">Aqui você pode editar ou remover as notícias existentes.</p>
+
+     <!-- Filtro de Notícias -->
+     <div class="card shadow mb-4">
+         <div class="card-header py-3">
+             <h6 class="m-0 font-weight-bold text-primary">Filtrar Notícias</h6>
+         </div>
+         <div class="card-body">
+            <form method="get">
+                <div class="form-group mb-3">
+                    <!-- Campo de Título ocupando a linha completa -->
+                    <label for="titulo">Título</label>
+                    {{ formularioFiltro.titulo }}
+                </div>
+                <div class="form-row">
+                    <!-- Campo de Data de Início -->
+                    <div class="form-group col-md-3 mb-3">
+                        <label for="data_publicacao_inicio">Data de Início</label>
+                        {{ formularioFiltro.data_publicacao_inicio }}
+                    </div>
+                    <!-- Campo de Data de Fim -->
+                    <div class="form-group col-md-3 mb-3">
+                        <label for="data_publicacao_fim">Data de Fim</label>
+                        {{ formularioFiltro.data_publicacao_fim }}
+                    </div>
+                    <!-- Campo de Categoria -->
+                    <div class="form-group col-md-6 mb-6">
+                        <label for="categoria">Categoria</label>
+                        {{ formularioFiltro.categoria }}
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+            </form>
+            
+            
+         </div>
+     </div>
+
+     <!-- Notícias Table -->
+     <div class="card shadow mb-4">
+         <div class="card-header py-3">
+             <h6 class="m-0 font-weight-bold text-primary">Listagem de Notícias</h6>
+         </div>
+         <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                     <thead>
+                         <tr>
+                             <th style="width: 20%;">Título</th>
+                             <th>Texto</th>
+                             <th>Data de Publicação</th>
+                             <th style="width: 10%;">Ações</th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                         {% for noticia in noticias %}
+                         <tr>
+                             <td>{{ noticia.categoria.nome }} - {{ noticia.titulo }}</td>
+                             <td>{{ noticia.texto|truncatechars:100 }}</td>
+                             <td>{{ noticia.data_publicacao|date:"d/m/Y" }}</td>
+                             <td>
+                                 <a href="{% url 'gerencia:editar_noticia' noticia.id %}" class="btn btn-warning btn-sm">Editar</a>
+                                 <form action="#" method="POST" style="display:inline;">
+                                     {% csrf_token %}
+                                     <button type="submit" class="btn btn-danger btn-sm">Remover</button>
+                                 </form>
+                             </td>
+                         </tr>
+                         {% endfor %}
+                     </tbody>
+                 </table>
+             </div>
+         </div>
+     </div>
+
+     <div class="d-flex justify-content-end">
+        <a href="{% url 'gerencia:cadastro_noticia'%}" class="btn btn-primary btn-icon-split">
+            <span class="icon text-white-50">
+                <i class="fas fa-flag"></i>
+            </span>
+            <span class="text">Cadastrar Nova Notícia</span>
+        </a>
+    </div>
+
+{% endblock %}
